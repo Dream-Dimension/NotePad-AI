@@ -8,3 +8,4 @@ A new take on UIs for interacting with LLMs.
 [![Video Demo](images/notepad_ai.png)](https://youtu.be/ntdlgFmSxQY)
 
 
+## [Live Demo](https://dreamdimension.net/NotePad-AI/)
