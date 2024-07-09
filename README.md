@@ -14,7 +14,6 @@ A new take on UIs for interacting with LLMs.
 ## Build & Run Locally
 ``` npm run build ```
 ``` cd buld ```
-``` npx http-server ``
+``` npx http-server ```
 
-* Note to run locally make sure to delete the hoempage setting in package.json. It is using package.json homepage: "/NotePad-AI/", because it needs to run on github and could not figure out a way to set it to be empty
-so the relative path worked. This did not work "." or "./"
+* Note to run locally make sure to delete the *homepage* setting in *package.json*. It is using *homepage: "/NotePad-AI/"*, to make the live  github static site work. Setting it to ther options like "." or "./" did not work on github pages but should work locally.
