@@ -27,10 +27,8 @@ function UserFollowUp({ onUserFollowUp }) {
       <textarea 
         value={userFollowUp} 
         onChange={(e) => setUserFollowUp(e.target.value)} 
-        placeholder="Type your follow-up question (max 500 characters)" 
-        maxLength={500}
         disabled={loading}
-        rows={5}
+        rows={3} 
       />
       <button onClick={handleUserFollowUpSubmit} disabled={loading}>
         Ask

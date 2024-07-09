@@ -301,9 +301,9 @@ function App() {
   function handleKeyDown(event) {
     if (event.ctrlKey) {
       switch (event.key) {
-        case 'k':
-        case 'K':
-          console.log('Ctrl + k was pressed. Full Text');
+        case 'b':
+        case 'B':
+          console.log('Ctrl + b was pressed. Full Text');
           analyzeText(inputText);
           break;
         case 'p':
@@ -453,7 +453,7 @@ function App() {
             <button onClick={() => {
               console.log("re-analyze", inputText);
               analyzeText(inputText);
-            }}>Analyze (Ctrl + k)</button>
+            }}>Analyze (Ctrl + b)</button>
             <button
               disabled={!(selectedText?.length > 0)}
               onClick={() => {
@@ -507,9 +507,8 @@ function App() {
                 </div>
               )}
             </div>
-          
             <div id='history-container'>
-              <h1>History: </h1>
+              <h1 id='history-header'>History: </h1>
               {displayedHistory.map((entry, index) => {
                 // Create a new entry object to avoid mutating the original entry
                 const newEntry = { ...entry };
@@ -518,9 +517,9 @@ function App() {
                 // Modify entry to include follow-up questions
                 if (newEntry.followUpQuestions != null) {
                   newEntry.followUpQuestions = newEntry.followUpQuestions.map(question => ({
-                    callback: () => {
+                    callback: async () => {
                       // Call based on follow up question (adds parent id): 
-                      analyseTextBasedOnPrompt(question, promptContext, entry.id);
+                      await analyseTextBasedOnPrompt(question, promptContext, entry.id);
                     },
                     text: question
                   }));
@@ -528,6 +527,9 @@ function App() {
 
                 const handleUserFollowUp = async (userFollowUpPrompt) => {
                   await analyseTextBasedOnPrompt(userFollowUpPrompt, promptContext, entry.id);
+                  const section = document.getElementById('history-header');
+                  section.scrollIntoView({ behavior: 'smooth' });
+
                 };
 
                 return (
