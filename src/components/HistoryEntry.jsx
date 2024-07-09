@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import PropTypes from 'prop-types';
+import UserFollowUp from './UserFollowUp';
 
 const CHAR_LIMIT = 100;
 
-const HistoryEntry = ({ entry }) => {
+const HistoryEntry = ({ entry, onUserFollowUp }) => {
   const [isExpanded, setIsExpanded] = useState({
     text: false,
     summary: true,
@@ -49,21 +51,30 @@ const HistoryEntry = ({ entry }) => {
       <h2> Follow Up Questions </h2>
       <div>
         {entry.followUpQuestions?.map((question, idx) => (
-          <div> 
-            <button key={idx} onClick={question.callback}>
+          <div key={`follow-up${idx}`}> 
+            <button onClick={question.callback}>
               {question.text}
             </button>
           </div>
         ))}
+      </div>
+      <div>
+        <h2>Follow Up: </h2>
+        <UserFollowUp onUserFollowUp={onUserFollowUp} />
       </div>
       { 
         entry.parentId ? <div>
           <a href={'#' + entry.parentId }>Go to Parent </a>
         </div> : null
       }
-
+    
     </div>
   );
+};
+
+HistoryEntry.propTypes = {
+  entry: PropTypes.object.isRequired,
+  onUserFollowUp: PropTypes.func.isRequired,
 };
 
 export default HistoryEntry;

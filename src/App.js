@@ -394,9 +394,11 @@ function App() {
 
   const totalPages = Math.ceil(promptHistory.length / entriesPerPage);
 
+
+
   return (
     <div className="app">
-      <div class="global-spinner">
+      <div className="global-spinner">
        <CircleLoader
               color={"#000"}
               loading={loading}
@@ -509,23 +511,28 @@ function App() {
               {displayedHistory.map((entry, index) => {
                 // Create a new entry object to avoid mutating the original entry
                 const newEntry = { ...entry };
+                const promptContext = `Context: ${newEntry.fullAnalysis}`;
 
                 // Modify entry to include follow-up questions
                 if (newEntry.followUpQuestions != null) {
                   newEntry.followUpQuestions = newEntry.followUpQuestions.map(question => ({
                     callback: () => {
-                      const context = `Context: ${newEntry.fullAnalysis}`;
-                      console.log('question to process', question, 'context', context, 'parentId', entry.id);
-                      // Call based on follow up question (keep parent id): 
-                      analyseTextBasedOnPrompt(question, context, entry.id);
+                      // Call based on follow up question (adds parent id): 
+                      analyseTextBasedOnPrompt(question, promptContext, entry.id);
                     },
                     text: question
                   }));
                 }
 
+                const handleUserFollowUp = async (userFollowUpPrompt) => {
+                  await analyseTextBasedOnPrompt(userFollowUpPrompt, promptContext, entry.id);
+                };
+
                 return (
                   <div key={'history-' + index}>
-                    <HistoryEntry entry={newEntry} />
+                    <HistoryEntry 
+                      entry={newEntry}             
+                      onUserFollowUp={handleUserFollowUp} />
                     <hr />
                   </div>
                 );
