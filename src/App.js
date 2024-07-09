@@ -6,6 +6,9 @@ import HistoryEntry from './components/HistoryEntry';
 import PromptEditor from './components/PromptEditor';
 import OpenAI from "openai";
 import { initGA, logEvent, logPageView } from './ga'; // Import Google Analytics functions
+import { extractArrayFromText } from './utils/Prompts';
+import { v4 as uuidv4 } from 'uuid';
+
 const Groq = require("groq-sdk");
 
 const PLATFORM_OPENAI = 'openai';
@@ -205,18 +208,14 @@ function App() {
     return isSignificantChange;
   };
 
-  const analyzeText = async (text) => {
-    if (text.trim() === '') {
-      setStatusText('There is nothing to analyze.');
-      return;
-    }
 
+  const analyseTextBasedOnPrompt = async (prompt = '', text  = '', parentId = null ) => {
     setLoading(true);
     setError(null); // Clear any previous error
     try {
       const fullAnalysis = platform === PLATFORM_GROQ
-        ? await askGroq(groqInstance, `${basePrompt}: ${text}`, selectedGroqModel)
-        : await askOpenAI(openaiInstance, `${basePrompt}: ${text}`, selectedOpenAIModel);
+        ? await askGroq(groqInstance, `${prompt}: ${text}`, selectedGroqModel)
+        : await askOpenAI(openaiInstance, `${prompt}: ${text}`, selectedOpenAIModel);
       
       setStatusText('Generating summary...');
       const summaryPrompt = 'Please summarize this in one or two sentences (friendly tone): ';
@@ -224,17 +223,28 @@ function App() {
         ? await askGroq(groqInstance, `${summaryPrompt}${fullAnalysis}`, selectedGroqModel)
         : await askOpenAI(openaiInstance, `${summaryPrompt}${fullAnalysis}`, selectedOpenAIModel);
       
+      setStatusText('Generating follow up questions');
+      const followUpQuestionsPrompt = 'Can you please (only provide a JSON array of strings like ["prompt 1", "prompt 2"]) generate 5 follow up prompts:';
+      const queryFollowUpQuestions = `${followUpQuestionsPrompt}, Context: ${text}`;
+      const followUpQuestionsPromptsStr = platform === PLATFORM_GROQ
+        ? await askGroq(groqInstance, queryFollowUpQuestions, selectedGroqModel)
+        : await askOpenAI(openaiInstance, queryFollowUpQuestions, selectedOpenAIModel);
+      const followUpQuestions = extractArrayFromText(followUpQuestionsPromptsStr);
       setStatusText('Finished analyzing.');
 
       const historyEntry = {
-        prompt: basePrompt,
+        id: uuidv4(),
+        parentId,
+        prompt, 
         text,
         summary,
         fullAnalysis,
         platform,
         model: platform === PLATFORM_GROQ ? selectedGroqModel : selectedOpenAIModel,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        followUpQuestions
       };
+
       await historyDb.add(historyEntry);
       setPromptHistory([historyEntry, ...promptHistory]);
       setLastProcessedMsg(text);
@@ -244,6 +254,14 @@ function App() {
     } finally {
       setLoading(false);
     }
+  }
+  const analyzeText = async (text) => {
+    if (text.trim() === '') {
+      setStatusText('There is nothing to analyze.');
+      return;
+    }
+
+    return await analyseTextBasedOnPrompt(basePrompt, text);
   };
 
   useEffect(() => {
@@ -378,6 +396,17 @@ function App() {
 
   return (
     <div className="app">
+      <div class="global-spinner">
+       <CircleLoader
+              color={"#000"}
+              loading={loading}
+              size={30}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+        />
+      </div>
+
+
       <div className="settings-button" onClick={() => setSettingsVisible(!settingsVisible)}>
         Settings
       </div>
@@ -477,12 +506,31 @@ function App() {
           
             <div id='history-container'>
               <h1>History: </h1>
-              {displayedHistory.map((entry, index) => (
-                <div key={'history-' + index}>
-                  <HistoryEntry entry={entry} />
-                  <hr />
-                </div>
-              ))}
+              {displayedHistory.map((entry, index) => {
+                // Create a new entry object to avoid mutating the original entry
+                const newEntry = { ...entry };
+
+                // Modify entry to include follow-up questions
+                if (newEntry.followUpQuestions != null) {
+                  newEntry.followUpQuestions = newEntry.followUpQuestions.map(question => ({
+                    callback: () => {
+                      const context = `Context: ${newEntry.fullAnalysis}`;
+                      console.log('question to process', question, 'context', context, 'parentId', entry.id);
+                      // Call based on follow up question (keep parent id): 
+                      analyseTextBasedOnPrompt(question, context, entry.id);
+                    },
+                    text: question
+                  }));
+                }
+
+                return (
+                  <div key={'history-' + index}>
+                    <HistoryEntry entry={newEntry} />
+                    <hr />
+                  </div>
+                );
+              })}
+
               <div className="pagination">
                 {Array.from({ length: totalPages }, (_, index) => (
                   <button

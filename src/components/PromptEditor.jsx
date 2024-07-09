@@ -44,7 +44,7 @@ const PromptEditor = ({ setBasePrompt }) => {
 
   const handleSelectChange = (selectedOption) => {
     if (selectedOption && selectedOption.value === 'add_new_prompt') {
-      const newPrompt = { id: uuidv4(), text: 'My new prompt...' + (prompts.length + 1) };
+      const newPrompt = { id: uuidv4(), text: 'My new base prompt...' + (prompts.length + 1) };
       const updatedPrompts = [...prompts, newPrompt];
       savePrompts(updatedPrompts);
       setSelectedPrompt(newPrompt);
@@ -89,7 +89,7 @@ const PromptEditor = ({ setBasePrompt }) => {
 
   const promptOptions = [
     ...prompts.map(prompt => ({ value: prompt.id, label: prompt.text, text: prompt.text })),
-    { value: 'add_new_prompt', label: 'Add New Prompt' }
+    { value: 'add_new_prompt', label: 'Add New Base Prompt' }
   ];
 
   return (
@@ -99,15 +99,15 @@ const PromptEditor = ({ setBasePrompt }) => {
           value={selectedPrompt ? { value: selectedPrompt.id, label: selectedPrompt.text } : null}
           onChange={handleSelectChange}
           options={promptOptions}
-          placeholder="Select a prompt"
+          placeholder="Select a base prompt"
           getOptionLabel={option => option.label}
           getOptionValue={option => option.value}
         />
       </div>
       <button onClick={() => setIsEditing(!isEditing)}>
-        {isEditing ? 'Hide Prompt Editor' : 'Edit Prompt'}
+        {isEditing ? 'Hide Base Prompt Editor' : 'Edit Base Prompt'}
       </button>
-      <button onClick={() => deletePrompt(selectedPrompt)}>Delete Prompt</button>
+      <button onClick={() => deletePrompt(selectedPrompt)}>Delete Base Prompt</button>
       {isEditing && (
         <div className="editor-container">
           <textarea

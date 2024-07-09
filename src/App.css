@@ -100,3 +100,10 @@ li {
 .model-selection-label {
   margin-right: 5px;
 }
+
+.global-spinner {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;  
+}
