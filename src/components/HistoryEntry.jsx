@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 import UserFollowUp from './UserFollowUp';
-
+import FullAnalysis from './FullAnalysis';
 const CHAR_LIMIT = 100;
 
 const HistoryEntry = ({ entry, onUserFollowUp }) => {
@@ -46,7 +46,7 @@ const HistoryEntry = ({ entry, onUserFollowUp }) => {
           <div>
             <button onClick={() => toggleRaw('fullAnalysis')}>{showRaw.fullAnalysis ? 'View Prettified' : 'View Raw Markdown'}</button>
             <br />
-            {showRaw.fullAnalysis ? entry.fullAnalysis : <ReactMarkdown>{entry.fullAnalysis}</ReactMarkdown>}
+            {showRaw.fullAnalysis ? entry.fullAnalysis : <FullAnalysis markdownText={entry.fullAnalysis}/>}
             <p><strong>Platform:</strong> {entry.platform}</p>
             <p><strong>Model:</strong> {entry.model}</p>
           </div>

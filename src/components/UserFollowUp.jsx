@@ -51,12 +51,13 @@ function UserFollowUp({ onUserFollowUp }) {
         disabled={loading}
         rows={3} 
       />
+      <br />
       <button onClick={handleUserFollowUpSubmit} disabled={loading}>
         Ask
       </button>
       {loading && <CircleLoader color={"#36D7B7"} loading={loading} />}
       {error && <p className="error-text">{error}</p>}
-      <p className="character-count">{userFollowUp.length}/500 characters</p>
+      <p className="character-count">{userFollowUp.length} characters</p>
     </div>
   );
 }
