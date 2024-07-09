@@ -18,7 +18,7 @@
     "react-spinners": "^0.13.8",
     "web-vitals": "^2.1.4"
   },
-  "homepage": ".",
+  "homepage": "/NotePad-AI/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
