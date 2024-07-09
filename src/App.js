@@ -301,12 +301,14 @@ function App() {
   function handleKeyDown(event) {
     if (event.ctrlKey) {
       switch (event.key) {
-        case '[':
-          console.log('Ctrl + [ was pressed. Full Text');
+        case 'k':
+        case 'K':
+          console.log('Ctrl + k was pressed. Full Text');
           analyzeText(inputText);
           break;
-        case ']':
-          console.log('Ctrl + ] was pressed. Selected text:', selectedText);
+        case 'p':
+        case 'P':
+          console.log('Ctrl + p was pressed. Selected text:', selectedText);
           if (selectedText?.length > 0) {
             analyzeText(selectedText);
           } else {
@@ -451,13 +453,13 @@ function App() {
             <button onClick={() => {
               console.log("re-analyze", inputText);
               analyzeText(inputText);
-            }}>Analyze (Ctrl + [)</button>
+            }}>Analyze (Ctrl + k)</button>
             <button
               disabled={!(selectedText?.length > 0)}
               onClick={() => {
                 console.log("analyze selected text");
                 analyzeText(selectedText);
-              }}>Analyze Selected Text (Ctrl + ])</button>
+              }}>Analyze Selected Text (Ctrl + p)</button>
 
             <PromptEditor
               setBasePrompt={setBasePrompt}

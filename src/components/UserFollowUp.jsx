@@ -24,18 +24,20 @@ function UserFollowUp({ onUserFollowUp }) {
 
   return (
     <div className="user-follow-up">
-      <input 
-        type="text" 
-        disabled={loading}
+      <textarea 
         value={userFollowUp} 
         onChange={(e) => setUserFollowUp(e.target.value)} 
-        placeholder="Type your follow-up question" 
+        placeholder="Type your follow-up question (max 500 characters)" 
+        maxLength={500}
+        disabled={loading}
+        rows={5}
       />
       <button onClick={handleUserFollowUpSubmit} disabled={loading}>
         Ask
       </button>
       {loading && <CircleLoader color={"#36D7B7"} loading={loading} />}
       {error && <p className="error-text">{error}</p>}
+      <p className="character-count">{userFollowUp.length}/500 characters</p>
     </div>
   );
 }
