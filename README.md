@@ -14,7 +14,7 @@ A new take on UIs for interacting with LLMs.
 ## Build & Run Locally
 ``` npm run build ```
 
-``` cd buld ```
+``` cd build ```
 
 ``` npx http-server ```
 
