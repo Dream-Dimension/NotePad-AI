@@ -12,8 +12,18 @@ const HistoryEntry = ({ entry, onUserFollowUp }) => {
     fullAnalysis: true,
   });
 
+  const [showRaw, setShowRaw] = useState({
+    text: false,
+    summary: false,
+    fullAnalysis: false,
+  });
+
   const toggleExpand = (section) => {
     setIsExpanded(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  const toggleRaw = (section) => {
+    setShowRaw((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
   return (
@@ -34,7 +44,9 @@ const HistoryEntry = ({ entry, onUserFollowUp }) => {
       <div>
         {isExpanded.fullAnalysis ? (
           <div>
-            <ReactMarkdown>{entry.fullAnalysis}</ReactMarkdown>
+            <button onClick={() => toggleRaw('fullAnalysis')}>{showRaw.fullAnalysis ? 'View Prettified' : 'View Raw Markdown'}</button>
+            <br />
+            {showRaw.fullAnalysis ? entry.fullAnalysis : <ReactMarkdown>{entry.fullAnalysis}</ReactMarkdown>}
             <p><strong>Platform:</strong> {entry.platform}</p>
             <p><strong>Model:</strong> {entry.model}</p>
           </div>
