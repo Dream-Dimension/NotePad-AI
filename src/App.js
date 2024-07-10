@@ -242,6 +242,7 @@ function App() {
     let currId = parentId;
     let count = 0;
     let contextStr = '';
+    // TODO: maybe create an array of strings and then reverse().join(' ');
     while (currId != null && count++ < maxHistory) {
       const curr =  promptHistory.find(x => { return x.id == currId}); 
       console.log('curr', curr);
@@ -257,7 +258,7 @@ function App() {
       if (includePastResults) {
         contextStr += curr?.fullAnalysis ?? '';
       }
-
+      contextStr += ' ';
       currId = curr?.parentId; // move towards previous grandparent, etc.
       
     }
@@ -281,6 +282,7 @@ function App() {
         : await askOpenAI(openaiInstance, `${summaryPrompt}${fullAnalysis}`, selectedOpenAIModel);
       
       setStatusText('Generating follow up questions');
+      // Follow up questoins probably okay to not enable extra context, but option is there:gi
       const followUpQuestionsPrompt = 'Can you please (only provide a JSON array of strings like ["prompt 1", "prompt 2"]) generate 5 follow up prompts:';
       const queryFollowUpQuestions = `${followUpQuestionsPrompt}, Context: ${text} ${moreContext}`;
       const followUpQuestionsPromptsStr = platform === PLATFORM_GROQ
@@ -592,7 +594,7 @@ function App() {
                 }
 
                 const handleUserFollowUp = async (userFollowUpPrompt) => {
-                  await analyseTextBasedOnPrompt(userFollowUpPrompt, promptContext, entry.id, {
+                  await analyseTextBasedOnPrompt(null, userFollowUpPrompt, entry.id, {
                     includeText: false,
                     includePrompt: false,
                     includePastResults: true 
