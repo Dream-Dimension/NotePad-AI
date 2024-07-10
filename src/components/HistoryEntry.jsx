@@ -99,7 +99,7 @@ const HistoryEntry = ({ entry, handleQuestionClicked, onUserFollowUp, getParentE
       <h2> Follow Up: </h2>
       <UserFollowUp  onUserFollowUp={async (...args) => { 
         setMsg(REMINDER_WHERE_RESULTS_SHOW);
-         await onUserFollowUp.apply(args);
+         await onUserFollowUp.apply(this, args);
       }} />
 
       {entry.parentId != null ? <button onClick={handleShowParent}>View Parent Analysis</button> : <i> Has no parent analysis.</i>}
