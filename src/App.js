@@ -15,6 +15,7 @@ const PLATFORM_OPENAI = 'openai';
 const PLATFORM_GROQ = 'groq';
 const KEY_OPENAI = 'openaiKey';
 const KEY_GROQ = 'grokKey';
+const ENTRIES_PER_PAGE = 5;
 
 const historyDb = new IndexedDBUtil('SecondaryDb2', 'HistoryStore2');
 const mainTextDb = new IndexedDBUtil('CoreDb2', 'MainText2');
@@ -99,7 +100,6 @@ function App() {
   const [savingStatus, setSavingStatus] = useState(' ');
   const [currentPage, setCurrentPage] = useState(1);
   const [settingsVisible, setSettingsVisible] = useState(false);
-  const entriesPerPage = 10;
 
   useEffect(() => {
     const storedPlatform = localStorage.getItem('platform') || PLATFORM_OPENAI;
@@ -390,11 +390,11 @@ function App() {
   };
 
   const displayedHistory = promptHistory.slice(
-    (currentPage - 1) * entriesPerPage,
-    currentPage * entriesPerPage
+    (currentPage - 1) * ENTRIES_PER_PAGE,
+    currentPage * ENTRIES_PER_PAGE
   );
 
-  const totalPages = Math.ceil(promptHistory.length / entriesPerPage);
+  const totalPages = Math.ceil(promptHistory.length / ENTRIES_PER_PAGE);
 
 
 

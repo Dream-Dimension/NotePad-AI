@@ -9,6 +9,7 @@ import ReactMarkdown from 'react-markdown';
  * So in the end we will have code blocks interweaved with regular text.
  */
 const FullAnalysis = ({ markdownText }) => {
+    
   const [blocks, setBlocks] = useState([]);
 
   const parseMarkdown = (text) => {
@@ -36,6 +37,10 @@ React.useEffect(() => {
   parseMarkdown(markdownText);
 }, [markdownText]);
 
+if (true) {
+    return <ReactMarkdown>{markdownText}</ReactMarkdown>
+}
+/*
 return (
   <div>
     {blocks.map((block, index) => {
@@ -58,7 +63,9 @@ return (
       }
     })}
   </div>
+  
 );
+*/
 };
 
 export default FullAnalysis;
