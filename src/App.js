@@ -16,7 +16,7 @@ const PLATFORM_GROQ = 'groq';
 const KEY_OPENAI = 'openaiKey';
 const KEY_GROQ = 'grokKey';
 const ENTRIES_PER_PAGE = 5;
-
+const INITIAL_PAGE = 1;
 const historyDb = new IndexedDBUtil('SecondaryDb2', 'HistoryStore2');
 const mainTextDb = new IndexedDBUtil('CoreDb2', 'MainText2');
 
@@ -98,7 +98,7 @@ function App() {
   const [selectedGroqModel, setSelectedGroqModel] = useState(groqModels[0].id);
   const [timerId, setTimerId] = useState(null);
   const [savingStatus, setSavingStatus] = useState(' ');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
   const [settingsVisible, setSettingsVisible] = useState(false);
 
   useEffect(() => {
@@ -400,7 +400,8 @@ function App() {
 
   return (
     <div className="app">
-      <div className="global-spinner">
+      {loading && <div className="global-spinner">
+      {currentPage != INITIAL_PAGE? <div className="warning-page"> Warning: results will appear on page {INITIAL_PAGE} but you are on page {currentPage} </div> : null}
        <CircleLoader
               color={"#000"}
               loading={loading}
@@ -408,7 +409,7 @@ function App() {
               aria-label="Loading Spinner"
               data-testid="loader"
         />
-      </div>
+      </div>}
 
 
       <div className="settings-button" onClick={() => setSettingsVisible(!settingsVisible)}>
