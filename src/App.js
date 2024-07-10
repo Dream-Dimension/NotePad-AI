@@ -100,6 +100,22 @@ function App() {
   const [savingStatus, setSavingStatus] = useState(' ');
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
   const [settingsVisible, setSettingsVisible] = useState(false);
+  const [showNonResultsPageWarning,  setShowNonResultsPageWarning] = useState(false);
+
+  useEffect(() => {
+    // We want to show the warning if a new result was generated
+    // and we have not gone to the first page yet to see it.
+
+    if (currentPage != INITIAL_PAGE) {
+      if (loading) {
+        setShowNonResultsPageWarning(true);
+      }
+    } else {
+      // We are back on the main page so we've likely seen the new entry:
+      setShowNonResultsPageWarning(false);
+
+    }
+  }, [loading, currentPage]);
 
   useEffect(() => {
     const storedPlatform = localStorage.getItem('platform') || PLATFORM_OPENAI;
@@ -397,11 +413,19 @@ function App() {
   const totalPages = Math.ceil(promptHistory.length / ENTRIES_PER_PAGE);
 
 
-
   return (
     <div className="app">
-      {loading && <div className="global-spinner">
-      {currentPage != INITIAL_PAGE? <div className="warning-page"> Warning: results will appear on page {INITIAL_PAGE} but you are on page {currentPage} </div> : null}
+      
+      
+      {showNonResultsPageWarning? 
+        <div className="top-fixed-item"> <div className="warning-page">
+           Warning: results will appear on page <button onClick={() => { setCurrentPage(1)}}> {INITIAL_PAGE} </button> but you are on page {currentPage}. 
+           <button onClick={() => {setShowNonResultsPageWarning(false)}}> Dismiss </button> </div>
+        </div>
+         : 
+         null}
+      
+      {loading && <div className="top-fixed-item">
        <CircleLoader
               color={"#000"}
               loading={loading}
