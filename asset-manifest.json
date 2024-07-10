@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/NotePad-AI/static/css/main.cee32b01.css",
-    "main.js": "/NotePad-AI/static/js/main.c72126d3.js",
+    "main.js": "/NotePad-AI/static/js/main.82ba33d5.js",
     "static/js/453.292ed414.chunk.js": "/NotePad-AI/static/js/453.292ed414.chunk.js",
     "index.html": "/NotePad-AI/index.html",
     "main.cee32b01.css.map": "/NotePad-AI/static/css/main.cee32b01.css.map",
-    "main.c72126d3.js.map": "/NotePad-AI/static/js/main.c72126d3.js.map",
+    "main.82ba33d5.js.map": "/NotePad-AI/static/js/main.82ba33d5.js.map",
     "453.292ed414.chunk.js.map": "/NotePad-AI/static/js/453.292ed414.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.cee32b01.css",
-    "static/js/main.c72126d3.js"
+    "static/js/main.82ba33d5.js"
   ]
 }
