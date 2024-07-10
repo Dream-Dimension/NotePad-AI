@@ -588,19 +588,10 @@ function App() {
             <div id='history-container'>
               <h1 id='history-header'>History: </h1>
               {displayedHistory.map((entry, index) => {
-                // Create a new entry object to avoid mutating the original entry
-                const newEntry = { ...entry };
-                const promptContext = `Context: ${newEntry.fullAnalysis}`;
-
-                // Modify entry to include follow-up questions
-                if (newEntry.followUpQuestions != null) {
-                  newEntry.followUpQuestions = newEntry.followUpQuestions.map(question => ({
-                    callback: async () => {
-                      // Call based on follow up question (adds parent id): 
-                      await analyseTextBasedOnPrompt(question, promptContext, entry.id);
-                    },
-                    text: question
-                  }));
+          
+                const handleQuestionClicked = async (entry, question) => {
+                  const promptContext = `Context: ${entry.fullAnalysis}`;
+                  await analyseTextBasedOnPrompt(question, promptContext, entry.id);
                 }
 
                 const handleUserFollowUp = async (userFollowUpPrompt) => {
@@ -617,8 +608,9 @@ function App() {
                 return (
                   <div key={'history-' + index}>
                     <HistoryEntry 
-                      entry={newEntry}          
+                      entry={entry}          
                       getParentEntry={getParentEntry}   
+                      handleQuestionClicked={handleQuestionClicked}
                       onUserFollowUp={handleUserFollowUp} />
                     <hr />
                   </div>

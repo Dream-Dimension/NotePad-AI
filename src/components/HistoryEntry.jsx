@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 
 const CHAR_LIMIT = 100;
 
-const HistoryEntry = ({ entry, onUserFollowUp, getParentEntry }) => {
+const HistoryEntry = ({ entry, handleQuestionClicked, onUserFollowUp, getParentEntry }) => {
   const [isExpanded, setIsExpanded] = useState({
     text: false,
     summary: true,
@@ -81,15 +81,17 @@ const HistoryEntry = ({ entry, onUserFollowUp, getParentEntry }) => {
       <div>
         {entry.followUpQuestions?.map((question, idx) => (
           <div key={`follow-up${idx}`}> 
-            <button onClick={question.callback}>
-              {question.text}
+            <button onClick={() => { 
+              handleQuestionClicked(entry, question);
+            }}>
+              {question}
             </button>
           </div>
         ))}
       </div>
 
       <h2> Follow Up: </h2>
-      <UserFollowUp followUpQuestions={entry.followUpQuestions} onUserFollowUp={onUserFollowUp} />
+      <UserFollowUp  onUserFollowUp={onUserFollowUp} />
 
       {entry.parentId != null ? <button onClick={handleShowParent}>View Parent Analysis</button> : <i> Has no parent analysis.</i>}
       <br />
@@ -101,7 +103,7 @@ const HistoryEntry = ({ entry, onUserFollowUp, getParentEntry }) => {
       >
         <button onClick={closeModal}>Close</button>
         {parentEntry ? (
-          <HistoryEntry entry={parentEntry} onUserFollowUp={onUserFollowUp} getParentEntry={getParentEntry} />
+          <HistoryEntry entry={parentEntry} handleQuestionClicked ={handleQuestionClicked } onUserFollowUp={onUserFollowUp} getParentEntry={getParentEntry} />
         ) : (
           <p>Loading...</p>
         )}
@@ -112,6 +114,7 @@ const HistoryEntry = ({ entry, onUserFollowUp, getParentEntry }) => {
 
 HistoryEntry.propTypes = {
   entry: PropTypes.object.isRequired,
+  handleQuestionClicked: PropTypes.func.isRequired, 
   onUserFollowUp: PropTypes.func.isRequired,
   getParentEntry: PropTypes.func.isRequired,
 };
