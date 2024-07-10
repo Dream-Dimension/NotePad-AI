@@ -7,7 +7,9 @@ import Modal from 'react-modal';
 
 const CHAR_LIMIT = 100;
 
+const REMINDER_WHERE_RESULTS_SHOW = 'Remember, new results appear at the top of the history panel.';
 const HistoryEntry = ({ entry, handleQuestionClicked, onUserFollowUp, getParentEntry }) => {
+  const [msg, setMsg] = useState(null);
   const [isExpanded, setIsExpanded] = useState({
     text: false,
     summary: true,
@@ -44,6 +46,7 @@ const HistoryEntry = ({ entry, handleQuestionClicked, onUserFollowUp, getParentE
 
   return (
     <div id={entry.id}>
+
       <h2>Base Prompt</h2>
       <ReactMarkdown>{entry.prompt ?? "*None*"}</ReactMarkdown>
       <h2 onClick={() => toggleExpand('summary')}>Summary 
@@ -81,8 +84,9 @@ const HistoryEntry = ({ entry, handleQuestionClicked, onUserFollowUp, getParentE
       <div>
         {entry.followUpQuestions?.map((question, idx) => (
           <div key={`follow-up${idx}`}> 
-            <button onClick={() => { 
-              handleQuestionClicked(entry, question);
+            <button onClick={async () => { 
+              setMsg(REMINDER_WHERE_RESULTS_SHOW);
+              await handleQuestionClicked(entry, question);
             }}>
               {question}
             </button>
@@ -90,8 +94,13 @@ const HistoryEntry = ({ entry, handleQuestionClicked, onUserFollowUp, getParentE
         ))}
       </div>
 
+      {msg && <div className='status-msg'> {msg} </div>}
+
       <h2> Follow Up: </h2>
-      <UserFollowUp  onUserFollowUp={onUserFollowUp} />
+      <UserFollowUp  onUserFollowUp={async (...args) => { 
+        setMsg(REMINDER_WHERE_RESULTS_SHOW);
+         await onUserFollowUp.apply(args);
+      }} />
 
       {entry.parentId != null ? <button onClick={handleShowParent}>View Parent Analysis</button> : <i> Has no parent analysis.</i>}
       <br />
@@ -107,6 +116,8 @@ const HistoryEntry = ({ entry, handleQuestionClicked, onUserFollowUp, getParentE
         ) : (
           <p>Loading...</p>
         )}
+        <button onClick={closeModal}>Close</button>
+
       </Modal>
     </div>
   );

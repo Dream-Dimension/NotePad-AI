@@ -115,6 +115,12 @@ li {
   z-index: 1000;  
 }
 
+.status-msg {
+  padding: 8px;
+  margin: 5px;
+  background-color: azure;
+  border: solid 4px #4CA;
+}
 
 .warning-page {
   background-color: bisque;
