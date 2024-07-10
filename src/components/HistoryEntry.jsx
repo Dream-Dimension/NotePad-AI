@@ -63,7 +63,7 @@ const HistoryEntry = ({ entry, handleQuestionClicked, onUserFollowUp, getParentE
       <div>
         {isExpanded.fullAnalysis ? (
           <div>
-          <button onClick={() => toggleRaw('fullAnalysis')}>{showRaw.fullAnalysis ? 'View Prettified' : 'View Raw Markdown'}</button>
+          <button onClick={() => toggleRaw('fullAnalysis')}>{showRaw.fullAnalysis ? 'View Prettified' : 'View Raw Text'}</button>
           <br />
           {showRaw.fullAnalysis ? entry.fullAnalysis : <FullAnalysis markdownText={entry.fullAnalysis}/>}
           <p><strong>Platform:</strong> {entry.platform}</p>
