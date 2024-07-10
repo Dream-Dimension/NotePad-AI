@@ -17,6 +17,8 @@ const KEY_OPENAI = 'openaiKey';
 const KEY_GROQ = 'grokKey';
 const ENTRIES_PER_PAGE = 5;
 const INITIAL_PAGE = 1;
+const APP_VERSION = 'v.0.0.1';
+
 const historyDb = new IndexedDBUtil('SecondaryDb2', 'HistoryStore2');
 const mainTextDb = new IndexedDBUtil('CoreDb2', 'MainText2');
 
@@ -97,7 +99,7 @@ function App() {
   const [selectedOpenAIModel, setSelectedOpenAIModel] = useState('gpt-3.5-turbo');
   const [selectedGroqModel, setSelectedGroqModel] = useState(groqModels[0].id);
   const [timerId, setTimerId] = useState(null);
-  const [savingStatus, setSavingStatus] = useState(' ');
+  const [savingStatus, setSavingStatus] = useState(APP_VERSION);
   const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [showNonResultsPageWarning,  setShowNonResultsPageWarning] = useState(false);
