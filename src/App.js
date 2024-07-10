@@ -456,6 +456,16 @@ function App() {
   const totalPages = Math.ceil(promptHistory.length / ENTRIES_PER_PAGE);
 
 
+  const getParentEntry = async (parentId) => {
+    try {
+      const parent = promptHistory.find(entry => entry.id === parentId);
+      return parent;
+    } catch (error) {
+      console.error('Error fetching parent entry:', error);
+      return null;
+    }
+  };
+  
   return (
     <div className="app">
       
@@ -607,7 +617,8 @@ function App() {
                 return (
                   <div key={'history-' + index}>
                     <HistoryEntry 
-                      entry={newEntry}             
+                      entry={newEntry}          
+                      getParentEntry={getParentEntry}   
                       onUserFollowUp={handleUserFollowUp} />
                     <hr />
                   </div>
