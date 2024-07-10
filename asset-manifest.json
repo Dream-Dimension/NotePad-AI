@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/NotePad-AI/static/css/main.05340c82.css",
-    "main.js": "/NotePad-AI/static/js/main.2bf76428.js",
-    "static/js/453.e71afc7d.chunk.js": "/NotePad-AI/static/js/453.e71afc7d.chunk.js",
+    "main.css": "/NotePad-AI/static/css/main.cee32b01.css",
+    "main.js": "/NotePad-AI/static/js/main.a5619ad8.js",
+    "static/js/453.292ed414.chunk.js": "/NotePad-AI/static/js/453.292ed414.chunk.js",
     "index.html": "/NotePad-AI/index.html",
-    "main.05340c82.css.map": "/NotePad-AI/static/css/main.05340c82.css.map",
-    "main.2bf76428.js.map": "/NotePad-AI/static/js/main.2bf76428.js.map",
-    "453.e71afc7d.chunk.js.map": "/NotePad-AI/static/js/453.e71afc7d.chunk.js.map"
+    "main.cee32b01.css.map": "/NotePad-AI/static/css/main.cee32b01.css.map",
+    "main.a5619ad8.js.map": "/NotePad-AI/static/js/main.a5619ad8.js.map",
+    "453.292ed414.chunk.js.map": "/NotePad-AI/static/js/453.292ed414.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.05340c82.css",
-    "static/js/main.2bf76428.js"
+    "static/css/main.cee32b01.css",
+    "static/js/main.a5619ad8.js"
   ]
 }
