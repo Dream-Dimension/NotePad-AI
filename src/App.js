@@ -225,14 +225,55 @@ function App() {
   };
 
 
-  const analyseTextBasedOnPrompt = async (prompt = '', text  = '', parentId = null ) => {
+  const getFullContext = (parentId, contextSettings) => {
+
+    const { 
+      includeText = false,
+      includePrompt = false,
+      includePastResults = false,
+      maxHistory = 10
+    } = contextSettings ?? {};
+
+  
+    if (!(includeText || includePrompt || includePastResults)) {
+      return '';
+    }
+
+    let currId = parentId;
+    let count = 0;
+    let contextStr = '';
+    while (currId != null && count++ < maxHistory) {
+      const curr =  promptHistory.find(x => { return x.id == currId}); 
+      console.log('curr', curr);
+      
+    
+      if (includePrompt) {
+        contextStr += curr?.prompt ?? '';        
+      }
+      if (includeText) {
+        contextStr += curr?.text ?? '';
+      }
+
+      if (includePastResults) {
+        contextStr += curr?.fullAnalysis ?? '';
+      }
+
+      currId = curr?.parentId; // move towards previous grandparent, etc.
+      
+    }
+    
+    return `Context History: ${contextStr}`;
+  }
+  const analyseTextBasedOnPrompt = async (prompt = '', text  = '', parentId = null, contextSettings ) => {
     setLoading(true);
     setError(null); // Clear any previous error
     try {
+      let moreContext = getFullContext(parentId, contextSettings);
+      console.log('moreContext', moreContext);
+      const composedPrompt = `${prompt}: ${text}${moreContext}`;
       const fullAnalysis = platform === PLATFORM_GROQ
-        ? await askGroq(groqInstance, `${prompt}: ${text}`, selectedGroqModel)
-        : await askOpenAI(openaiInstance, `${prompt}: ${text}`, selectedOpenAIModel);
-      
+        ? await askGroq(groqInstance, composedPrompt, selectedGroqModel)
+        : await askOpenAI(openaiInstance, composedPrompt, selectedOpenAIModel);
       setStatusText('Generating summary...');
       const summaryPrompt = 'Please summarize this in one or two sentences (friendly tone): ';
       const summary = platform === PLATFORM_GROQ
@@ -241,7 +282,7 @@ function App() {
       
       setStatusText('Generating follow up questions');
       const followUpQuestionsPrompt = 'Can you please (only provide a JSON array of strings like ["prompt 1", "prompt 2"]) generate 5 follow up prompts:';
-      const queryFollowUpQuestions = `${followUpQuestionsPrompt}, Context: ${text}`;
+      const queryFollowUpQuestions = `${followUpQuestionsPrompt}, Context: ${text} ${moreContext}`;
       const followUpQuestionsPromptsStr = platform === PLATFORM_GROQ
         ? await askGroq(groqInstance, queryFollowUpQuestions, selectedGroqModel)
         : await askOpenAI(openaiInstance, queryFollowUpQuestions, selectedOpenAIModel);
@@ -551,7 +592,11 @@ function App() {
                 }
 
                 const handleUserFollowUp = async (userFollowUpPrompt) => {
-                  await analyseTextBasedOnPrompt(userFollowUpPrompt, promptContext, entry.id);
+                  await analyseTextBasedOnPrompt(userFollowUpPrompt, promptContext, entry.id, {
+                    includeText: false,
+                    includePrompt: false,
+                    includePastResults: true 
+                  });
                   const section = document.getElementById('history-header');
                   section.scrollIntoView({ behavior: 'smooth' });
 

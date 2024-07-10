@@ -22,7 +22,7 @@ export const BasePrompts = [
         const array = JSON.parse(arrayMatch[0]);
         return array;
       } else {
-        console.error('No JSON array found in the text.');
+        console.error('No JSON array found in the text.', text);
         return []
       }
     } catch (error) {
